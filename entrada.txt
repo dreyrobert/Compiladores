@@ -1,0 +1,6 @@
+_var := True
+If _var != (10 >= 09)
+    do
+        _var1 := 09
+    else
+        _meuBool := True
