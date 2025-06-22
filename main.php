@@ -1,32 +1,37 @@
 <?php
 
 require_once 'base.php';
-require_once 'io.php';
 require_once 'lexer.php';
+require_once 'parser.php';
+require_once 'semActions.php';
+
+function cerr($message) {
+    file_put_contents('php://stderr', $message);
+}
 
 if ($argc < 2) {
-    echo "Uso: php main.php <arquivo_entrada>\n";
+    cerr("Uso: php main.php <arquivo_entrada>\n");
     exit(1);
 }
 
 $filename = $argv[1];
 $input = file_get_contents($filename);
 if ($input === false) {
-    echo "Erro ao abrir o arquivo de entrada $filename\n";
+    cerr("Erro ao abrir o arquivo de entrada " . $filename . "\n");
     exit(1);
 }
 
+// --- Análise Léxica ---
 $lexer = new DFA();
 $tokens = $lexer->analyze($input);
 
 $tabelaDeSimbolos = [];
-
 foreach ($tokens as $token) {
-        $tabelaDeSimbolos[] = [
-            'linha' => $token->line,
-            'identificador' => $token->value,
-            'rótulo' => $token->tokenName
-        ];
+    $tabelaDeSimbolos[] = [
+        'linha' => $token->line,
+        'identificador' => $token->value,
+        'rótulo' => $token->tokenName
+    ];
 }
 
 echo "Linha\tIdentificador\tRótulo\n";
@@ -35,9 +40,18 @@ foreach ($tabelaDeSimbolos as $simbolo) {
 }
 
 echo "\n";
-echo 'Fita de Saída: ';
+echo 'Fita de Saída (Tokens): ';
 foreach ($tokens as $t) {
     echo getName($t->type) . " ";
 }
-
 echo PHP_EOL;
+
+$parser = new SLR_Table();
+
+$parser->displayTable();
+
+$result = $parser->parse($tokens);
+
+exit($result);
+
+?>
