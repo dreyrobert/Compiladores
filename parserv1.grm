@@ -1,0 +1,22 @@
+"Start Symbol" = <Program> 
+
+<Program> ::= <StmtList>
+           
+<StmtList> ::= <Stmt> <StmtList>  
+<StmtList> ::=         
+            
+<Stmt> ::= TOKEN_VAR TOKEN_ATRIB <Exp>        
+        | TOKEN_IF <Exp> TOKEN_DO <Stmt> TOKEN_ELSE <Stmt>        
+        | TOKEN_IF <Exp> TOKEN_DO <Stmt>
+        
+<Exp> ::= <Exp> TOKEN_EQ <Exp>       
+        | <Exp> TOKEN_NEQ <Exp>       
+        | <Exp> TOKEN_GT <Exp>       
+        | <Exp> TOKEN_LT <Exp>       
+        | <Exp> TOKEN_GTE <Exp>       
+        | <Exp> TOKEN_LTE <Exp>       
+        | TOKEN_LPAREN <Exp> TOKEN_RPAREN       
+        | TOKEN_TRUE       
+        | TOKEN_FALSE       
+        | TOKEN_NUMBER       
+        | TOKEN_VAR
